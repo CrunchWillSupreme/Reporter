@@ -1,0 +1,114 @@
+
+
+
+<html>
+    <head>
+      {% if title %}
+      <title>{{ title }} - Reporter</title>
+      {% else %}
+      <title>Welcome to Reporter</title>
+      {% endif %}
+      
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <link rel="stylesheet" href="{{ url_for('static', filename='custom.css') }}">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+
+</head>
+<div class="container-fluid">
+<body>
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+		<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+			<span class="navbar-brand">Reporter</span>
+		</div>
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+		{% if current_user.is_anonymous %}
+				<li class="active">
+					<a href="{{ url_for('login') }}" class="btn btn-success btn-sm" role="button">Login <span class="sr-only">(current)</span></a>
+				</li>
+		{% elif current_user.is_authenticated and current_user.role == 'admin' %}
+				<li>
+					<a href="{{ url_for('home') }}">Home</a>
+				</li>
+				<li>
+					<a href="{{ url_for('register') }}">Register new user</a>
+				</li>
+				<!--<li>-->
+				<!--<a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm" role="button">Logout</a>-->
+				<!--</li>-->
+		{% else %}		
+				<li>
+					<a href="{{ url_for('home') }}">Home</a>
+				</li>
+				<!--<li>-->
+				<!--<a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm" role="button">Logout</a>-->
+				<!--</li>-->
+		{% endif %}
+		{% if current_user.is_authenticated %}
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+					Reports:
+					<span class="caret"></span>
+				</a>
+				<ul class="dropdown-menu">
+		{% if current_user.check_role('cat') %}
+					<li><a href="{{ url_for('cat') }}" class="btn btn-warning btn-sm" role="button">CAT</a></li>
+		{% endif %}
+		{% if current_user.check_role('ack') %}
+					<li><a href="{{ url_for('ack') }}" class="btn btn-warning btn-sm" role="button">Acknowledgment Letters</a></li>
+		{% endif %}
+		{% if current_user.check_role('matter') %}
+					<li><a href="{{ url_for('matter') }}" class="btn btn-warning btn-sm" role="button">Matter Upload</a></li>
+		{% endif %}
+		{% if current_user.check_role('admin') %}
+					<li><a href="{{ url_for('admicon') }}" class="btn btn-warning btn-sm" role="button">ADM and ICON Reports</a></li>
+		{% endif %}
+		{% endif %}
+				</ul>
+			</li>
+
+			{% if current_user.is_authenticated %}
+			<ul class="nav navbar-nav navbar-right">
+				<li>
+					<a href="{{ url_for('logout') }}">Logout</a>
+				</li>
+			{% endif %}
+			</ul>
+		</div>
+	</nav>
+                                        
+This is what your role is {{ current_user.role }}
+This is what your username is {{ current_user.username }}
+<div>{{ current_user.role }}</div>
+<p> This is a P tag </p>
+</div>
+</div>
+            </div>
+                <hr>
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% endwith %}
+                {% block app_content %}{% endblock %}
+        </body>
+    </div>
+    <p> This is part of the Base html, under the block content <br> this is a br tag </br></p>
+</html>

@@ -1,0 +1,74 @@
+
+
+
+<html>
+    <head>
+      {% if title %}
+      <title>{{ title }} - Reporter</title>
+      {% else %}
+      <title>Welcome to Reporter</title>
+      {% endif %}
+      
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <link rel="stylesheet" href="{{ url_for('static', filename='custom.css') }}">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+
+    </head>
+    <body>
+        <div>Reporter: 
+            {% if current_user.is_anonymous %}
+            <a href="{{ url_for('login') }}" class="btn btn-success btn-sm" role="button">Login</a>
+            {% elif current_user.is_authenticated and current_user.role == 'admin' %}
+            <a href="{{ url_for('home') }}" class="btn btn-primary btn-sm" role="button">Home</a>
+            <a href="{{ url_for('register') }}" class="btn btn-info btn-sm" role="button">Register new user</a>
+            <ul class="nav justify-content-end">
+                <li class="nav-item">
+                    <a href="{{ url_for('logout') }}" class="nav-link active" role="button">Logout</a>
+                </li>
+            {% else %}
+            <a href="{{ url_for('home') }}" class="btn btn-primary btn-sm" role="button">Home</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm" role="button">Logout</a>
+            {% endif %}
+            <div> Reports:
+                <div class="btn-group" role="group">
+                    {% if current_user.is_authenticated %}
+                    {% if current_user.check_role('cat') %}
+                    <a href="{{ url_for('cat') }}" class="btn btn-warning btn-sm" role="button">CAT</a>
+                    {% endif %}
+                    {% if current_user.check_role('ack') %}
+                    <a href="{{ url_for('ack') }}" class="btn btn-warning btn-sm" role="button">Acknowledgment Letters</a>
+                    {% endif %}
+                    {% if current_user.check_role('matter') %}
+                    <a href="{{ url_for('matter') }}" class="btn btn-warning btn-sm" role="button">Matter Upload</a>
+                    {% endif %}
+                    {% if current_user.check_role('admin') %}
+                    <a href="{{ url_for('admicon') }}" class="btn btn-warning btn-sm" role="button">ADM and ICON Reports</a>
+                    {% endif %}
+                    {% endif %}
+                    This is what your role is {{ current_user.role }}
+                    This is what your username is {{ current_user.username }}
+                    <div>{{ current_user.role }}</div>
+                    <p> This is a P tag </p>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <hr>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+            {% block app_content %}{% endblock %}
+        </div>
+    </body>
+    <p> This is part of the Base html, under the block content <br> this is a br tag </br></p>
+</html>

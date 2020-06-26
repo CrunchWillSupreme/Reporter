@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+<div class="container">
+    <!--<div class="jumbotron jumbotron-fluid">-->
+         <!--<div class="container">-->
+            <h1 class="display-4" align="center">Hello, {{ current_user.username }}<div>Welcome to the homepage!! </div></h1>
+            <hr>
+            <h2 align="center">Your role is: {{ current_user.role }} </h2>
+
+            <div class="row justify-content-md-center">
+                 <div class="col-md-auto">
+                    <a href="{{ url_for('changepw') }}" class="btn btn-will btn-md">
+                        <span class="glyphicon glyphicon-folder-open"></span> Change Password
+                    </a>
+                 </div>
+            </div>        
+            <div class="row"> 
+                <div class="col-sm">
+                    HOME-One of three columns
+                </div>
+                <div class="col-sm">
+                    HOME-One of three columns
+                </div>
+                <div class="col-sm">
+                    HOME-One of three columns
+                </div>
+            </div>
+        <!--</div>-->
+    <!--</div>-->
+</div>
+{% endblock %}

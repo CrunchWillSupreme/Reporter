@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <div class="container">
+        <h1>Enter Credentials</h1>
+        <div class="row">
+            <div class="col-sm-6 col-md-offset-3">
+                <form action="" method="post">
+                    {{ form.hidden_tag() }}
+                    <p>
+                        {{ wtf.form_field(form.emailadd) }}<br>
+                        {% for error in form.emailadd.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </p>
+                    <p>
+                        {{ wtf.form_field(form.password) }}<br>
+                        {% for error in form.password.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </p>
+                    <p>{{ wtf.form_field(form.submit, button_map={'submit':'primary'}) }}</p>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+
+<div class="container">
+    <!--<div class="jumbotron jumbotron-fluid">-->
+        <!--<div class="container">-->
+            <h1 class="display-4">Matter Upload</h1>
+            <hr>
+        <!--<p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>-->
+        
+            <div class="container">
+            <!--<h1><strong>Matter Upload</strong></h1>-->
+                <h2>MATTER matter matter MATTER</h2>
+                <form action="" method="post">
+                {{ form.hidden_tag() }}
+                
+                
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="checkbox">
+                                  <label data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                {{ wtf.form_field(form.send_email) }}
+                                  </label>
+                                  <small id="fileHelp" class="form-text text-muted">This will send the report(s) out to the stored directory list.</small>
+                                </div>
+                                <div id="collapseOne" aria-expanded="false" class="collapse">
+                                    <div class="form-group">
+                                    {{ wtf.form_field(form.emailadd) }}
+                                    </div>
+                                    <div class="form-group">
+                                    {{ wtf.form_field(form.password) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>    
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                            {{ wtf.form_field(form.submit, button_map={'submit':'danger'}) }}
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            
+                <p>View past reports:
+                    <a href="{{ url_for('MatterArchive') }}" class="btn btn-success btn-md">
+                    <span class="glyphicon glyphicon-folder-open"></span> Matter Upload Archive
+                    </a>
+                </p>
+            </div>
+        <!--</div>-->
+    <!--</div>-->
+</div> 
+{% endblock %}

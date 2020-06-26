@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
+
+<div class="container">
+    <!--<div class="jumbotron jumbotron-fluid">-->
+        <!--<div class="container">-->
+            <h1 class="display-4">Fine Arts QTD</h1>
+            <hr>
+        <!--<p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>-->
+            <div class="col-sm-6">
+            <form action="" method="post">
+                    {{ form.hidden_tag() }}
+                    Select Date (Year/Month)
+                <div class="form-group">
+                    <div class="input-group date" id="datetimepicker11" data-target-input="nearest">
+                        <input name="date" type="text" class="form-control datetimepicker-input" data-target="#datetimepicker11" id="date"/>
+                        <div class="input-group-append" data-target="#datetimepicker11" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+                </div>
+            
+                <script type="text/javascript">
+                    $(function () {
+                        $('#datetimepicker11').datetimepicker({
+                            viewMode: 'years',
+                            format: 'MM/YYYY'
+                        });
+                    });
+                </script>
+                
+                
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="checkbox">
+                                  <label data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                {{ wtf.form_field(form.send_email) }}
+                                  </label>
+                                  <small id="fileHelp" class="form-text text-muted">This will send the report(s) out to the stored directory list.</small>
+                                </div>
+                                <div id="collapseOne" aria-expanded="false" class="collapse">
+                                    <div class="form-group">
+                                    {{ wtf.form_field(form.emailadd) }}
+                                    </div>
+                                    <div class="form-group">
+                                    {{ wtf.form_field(form.password) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>    
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                            {{ wtf.form_field(form.submit, button_map={'submit':'danger'}) }}
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            
+
+            </div>
+        <!--</div>-->
+    <!--</div>-->
+</div> 
+{% endblock %}

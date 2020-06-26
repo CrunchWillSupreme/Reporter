@@ -1,0 +1,6 @@
+/* remove rounding from cards, buttons and inputs */
+.card, .btn, .form-control { border-radius: 0; }
+
+.btn-danger { color: white;}
+
+#lgtbtn .navbar-nav .navbar-right {color: whilte;}

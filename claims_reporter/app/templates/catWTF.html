@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+
+
+<div class="container">
+    <!--<div class="jumbotron jumbotron-fluid">-->
+        <!--<div class="container">-->
+            <h1 class="display-4">CAT Report</h1>
+            <hr>
+
+            <h2>CAT Report</h2>
+            <p>Save the Eclipse CAT report in the EFormatter template and run the macro:
+                <p>Copy and Paste the <strong>Eclipse</strong> CAT report into the EFormatter template and press "ctrl+shift+s" to run the macro:
+                    <a href="{{ url_for('EFormatter') }}" class="btn btn-will btn-md">
+                        <span class="glyphicon glyphicon-folder-open"></span> EFormatterTemplate
+                    </a>
+                </p>
+            </p>
+            <form action="" method="post">
+                    {{ form.hidden_tag() }}
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="checkbox">
+                              <label data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                {{ wtf.form_field(form.send_email) }}
+                              </label>
+                              <small id="fileHelp" class="form-text text-muted">This will send the report(s) out to the stored directory list.</small>
+                            </div>
+                            <div id="collapseOne" aria-expanded="false" class="collapse">
+                                <div class="form-group">
+                                    {{ wtf.form_field(form.emailadd) }}
+                                </div>
+                                <div class="form-group">
+                                    {{ wtf.form_field(form.password) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>    
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-4">
+                            {{ wtf.form_field(form.submit, button_map={'submit':'danger'}) }}
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <p>View past reports:
+                <a href="{{ url_for('CATArchive') }}" class="btn btn-will btn-md">
+                    <span class="glyphicon glyphicon-folder-open"></span> CAT Report Archive
+                </a>
+            </p>
+            <div id = "log_console">
+                {{ log }}
+            </div>
+            <script>
+                // Client-side Javascript in the HTML
+                var targetContainer = document.getElementById("log_console");
+                var eventSource = new EventSource("/log_console/");
+                eventSource.onmessage = function(e) {
+                    targetContainer.innerHTML = e.data
+                    }
+            </script>
+        <!--</div>-->
+    <!--</div>-->
+</div>
+
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+
+{% block app_content %}
+<h1><strong>CAT Report</strong></h1>
+<div class="container">
+    <h2>CAT cat cat CAT</h2>
+    <p>Save the Eclipse CAT report in the EFormatter template and run the macro:
+        <a href="{{ url_for('EFormatter') }}" class="btn btn-primary btn-md">
+          <span class="glyphicon glyphicon-folder-open"></span> EFormatterTemplate
+        </a>
+    </p>
+    <form action="" method="post">
+        <p>
+            {{ form.emailadd.label }}<br>
+            {{ form.emailadd(size=32) }}<br>
+            {% for error in form.emailadd.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password(size=32) }}<br>
+            {% for error in form.password.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        
+        </div>
+        <div class="form-group">
+        <button class="btn btn-success" type="submit">Run report</button>
+        </div>
+
+        
+    </form>
+</div>
+
+{% endblock %}

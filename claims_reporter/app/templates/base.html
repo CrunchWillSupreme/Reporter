@@ -1,0 +1,135 @@
+
+
+
+<html>
+    <head>
+        {% if title %}
+        <title>{{ title }} - Reporter</title>
+        {% else %}
+        <title>Welcome to Reporter</title>
+        {% endif %}
+      
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ url_for('static', filename='will.css') }}">
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    
+    </head>
+    <div class="container">
+    <!--<h1>WELCOME</h1>-->
+        <body>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div class="navbar-brand">Reporter</div>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarColor02">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                        {% if current_user.is_anonymous %}
+                            <a href="{{ url_for('login') }}" class="btn btn-outline-success btn-sm" role="button">Login <span class="sr-only">(current)</span></a>
+                        </li>
+                        {% elif current_user.is_authenticated and current_user.role == 'admin' %}
+                        <li class="nav-item">
+                            <a href="{{ url_for('home') }}" class="btn btn-outline-warning btn-sm" role="button">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url_for('register') }}" class="btn btn-outline-info btn-sm" role="button">Register new user</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url_for('querysearch') }}" class="btn btn-outline-success btn-sm" role="button">Query Search</a>
+                        </li>
+                        <!--<li class="nav-item">-->
+                        <!--<a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm" role="button">Logout</a>-->
+                        <!--</li>-->
+                        {% else %}
+                        <li class="nav-item">
+                            <a href="{{ url_for('home') }}" class="btn btn-outline-warning btn-sm" role="button">Home</a>
+                        </li>
+                        <!--<li class="nav-item">-->
+                        <!--<a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm" role="button">Logout</a>-->
+                        <!--</li>-->
+                        {% endif %}
+                        {% if current_user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Reports:
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                {% if current_user.check_role('cat') %}
+                                <li><a href="{{ url_for('cat') }}" class="dropdown-item">CAT</a></li>
+                                {% endif %}
+                                {% if current_user.check_role('ack') %}
+                                <li><a href="{{ url_for('ack') }}" class="dropdown-item">Acknowledgment Letters</a></li>
+                                {% endif %}
+                                {% if current_user.check_role('matter') %}
+                                <li><a href="{{ url_for('matter') }}" class="dropdown-item">Matter Upload</a></li>
+                                {% endif %}
+                                {% if current_user.check_role('profit primis') %}
+                                <li><a href="{{ url_for('profitprimis') }}" class="dropdown-item">Profit Primis Open Close</a></li>
+                                {% endif %}
+                            {% if current_user.check_role('admin') %}
+                                <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Monthly Reports</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="{{ url_for('admicon') }}" class="dropdown-item" role="button">ADM and ICON Reports</a></li>   
+                                        <li><a href="{{ url_for('igtc') }}" class="dropdown-item" role="button">IGTC</a></li>
+                                        <li><a href="{{ url_for('profitprimis') }}" class="dropdown-item" role="button">Profit Primis Open Close</a></li>
+                                        <li><a href="{{ url_for('med_mal') }}" class="dropdown-item" role="button">Spec Med/Med Mal</a></li>
+                                        <li><a href="{{ url_for('finearts') }}" class="dropdown-item" role="button">Fine Arts</a></li>   
+                                        <li><a href="#" class="dropdown-item" role="button">[Other Reports]</a></li>    
+                                    </ul>
+                                </li>
+                                <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Quarterly Reports</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="{{ url_for('fineartsQTD') }}" class="dropdown-item" role="button">Fine Arts Quarterly</a></li>   
+                                        <li><a href="#" class="dropdown-item" role="button">ProSurance Fidelity</a></li>
+                                        <li><a href="#" class="dropdown-item" role="button">250K CD - PModlin</a></li>
+                                        <li><a href="#" class="dropdown-item" role="button">Data Breach - JNiemczik</a></li>
+                                        <li><a href="#" class="dropdown-item" role="button">[Other Reports]</a></li>    
+                                    </ul>
+                                </li>
+                            {% endif %}
+                            </ul>
+                        </li>
+                        {% endif %}
+                        {% if current_user.is_authenticated %}
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm" role="button">Logout</a>
+                        </li>
+                    {% endif %}
+                    </ul>
+                </div>
+            </nav>
+            {% if current_user.is_authenticated %}
+            <div>Welcome, <strong>{{ current_user.username }}</strong>.</div>
+            {% endif %}
+        <!--<div class="jumbotron-h2 jumbotron-fluid">-->
+          <!--<div class="container">-->
+        <!--<h1 class="display-6">Fluid jumbotron</h1>-->
+        <!--<p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>-->
+        <!--<div>Welcome, <strong>{{ current_user.username }}</strong>.  {{ current_user.role }}</div>-->
+          <!--</div>-->
+        <!--</div>  -->                              
+            <hr>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+                <div class="jumbotron jumbotron-fluid">
+                    <div class="container">
+                    {% block app_content %}{% endblock %}
+                    </div>
+                </div>
+            <hr>
+            <p>For questions, comments, or to report issues, email: whan@markelcorp.com</p>
+        </body>
+    </div>
+</html>

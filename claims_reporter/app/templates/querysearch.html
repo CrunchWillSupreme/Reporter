@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+
+<div class="container">
+    <!--<div class="jumbotron jumbotron-fluid">-->
+      <!--<div class="container">-->
+        <h1 class="display-4">Query Search</h1>
+        <hr>
+            <form action="" method="post">
+                 <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            {{ wtf.form_field(form.year) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                               {{ wtf.form_field(form.keyword) }}
+                            </div>
+                        </div>
+                </div>
+                <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                            {{ wtf.form_field(form.submit, button_map={'submit':'success'}) }}
+                            </div>
+                        </div>
+                </div>
+            </form>
+            <div class="row">
+                 {{data | safe}}
+            </div>
+        <!--</div>-->
+    <!--</div>-->
+</div>
+{% endblock %}

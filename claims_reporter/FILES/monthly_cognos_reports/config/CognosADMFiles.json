@@ -1,0 +1,97 @@
+{
+"BrokerageCasualty$250k750k": {
+        "sql": "ADM-250k-750k_Brokerage_Casualty_Report.sql",
+        "template": "TEMPLATE_250k_750kBrokerageCasualty_ADM.xlsm",
+        "save_as": "{end_date:%B %Y} - 250k-750k Brokerage Casualty - ADM",
+        "recipients": ["kate.williams@markel.com", "annmarie.moriarty@markel.com"],
+        "subject": "Claims Advocate - Brokerage Casualty Report - Incurred between $250K - $750K {end_date:%B %Y}",
+        "body": "Hello,\n\nAttached is the Incurred report for Brokerage Casualty as of {end_date:%B %Y} as requested through the Claims Advocate program.  The report reflects all open and any closed claims that occurred during the month.\n\nThis report was generated using the following paramaters:\nProduct Line Name: Brokerage Casualty AND Current Period AND Gross. \n\nCase Incurred Loss and ALAE Net of Recoveries Amount - Cumulative: Between 250,000 and 750,000.\n\nShould you have any questions, please feel free to contact me.\n\nHave a great day!\nWill Han",
+        "attachs": ["//MKLFILE/CLAIMS/corpfs06-filedrop/ClaimsReporting/Monthly Reporting/{end_date:%Y}/{end_date:%m%Y}/{end_date:%B %Y} - 250k-750k Brokerage Casualty - ADM.xlsx"],
+        "ccopy" : ["whan@markelcorp.com"],
+		"sum_start" : 9,
+		"sum_end" : 16,
+		"macro": "BrokerageCas.BrokerageCas"
+		},
+
+
+"AllClaimsBrokerageProp": {
+        "sql": "ADM-All_Claims-Brokerage_Property.sql",
+        "template": "TEMPLATE_AllClaimsBrokerageProperty_ADM.xlsm",
+        "save_as": "{end_date:%B %Y} - All Claims Brokerage Property - ADM",
+        "recipients": ["CMasella@markelcorp.com", "jon.hahn@MarkelCorp.com", "tkrause@MarkelCorp.com"],
+        "subject": "Report for Business Leader - Brokerage Property Report - {end_date:%B %Y}",
+        "body": "Hello,\n\nAttached is the Brokerage Property report that has been requested through the Claims Advocate program for {end_date:%B %Y} close.  The report includes all open and any closed claims through system month-end ({end_date:%B %Y}).\n\nThis report was generated using the following paramaters:\nProduct Line Name: Brokerage Property AND Gross AND( Claim Closed Date: Between {start_date:%x} and {end_date:%x}) OR Claim Status: Open ) AND Current Period. \n\nDate of Loss: Descending order.\n\nShould you have any questions, please feel free to contact me.\n\nHave a great day:\nWill Han",
+        "attachs": ["//MKLFILE/CLAIMS/corpfs06-filedrop/ClaimsReporting/Monthly Reporting/{end_date:%Y}/{end_date:%m%Y}/{end_date:%B %Y} - All Claims Brokerage Property - ADM.xlsx"],
+        "ccopy": ["CJnelson@markelcorp.com"],
+		"P_start_date":"{start_date:%x}",
+		"P_end_date":"{end_date:%x}",
+		"sum_start" : 15,
+		"sum_end" : 22,
+		"macro": "AllClaims.AllClaims"
+		},
+
+"OceanMarine$25k": {
+        "sql": "ADM-25k-Ocean_Marine_Report.sql",
+        "template": "TEMPLATE_25kOceanMarine_ADM.xlsm",
+        "save_as": "{end_date:%B %Y} - 25k Ocean Marine - ADM",
+        "recipients": ["mkeely@markelcorp.com"],
+        "subject": "Reports for Business Leaders - $25K Incurred Ocean Marine Report - {end_date:%B %Y}",
+        "body": "Hello,\n\nAttached is the $25K Incurred Ocean Marine report that has been requested through the Claims Advocate program. The report has been sorted by open and any claims that closed during systems' month end ({end_date:%B %Y}).\n\nThis report was generated using the following parameters:\n(Product Line Name: Ocean Marine OR ( Product Line Name: Global Insurance Marine AND Product Line 2 Name: Ocean Marine US Insurance ) ) AND Current Period AND Gross AND ( Claim Folder Closed Date: Between {start_date:%x} and {end_date:%x} OR Claim Folder Status Name: Open ).  \n\nCase Incurred Loss and ALAE Net of Recoveries Amount - Cumulative: Greater than or equal to 25,000.\n\nShould you have any questions, please feel free to contact me.\n\nThanks,\nWill Han",
+        "attachs": ["//MKLFILE/CLAIMS/corpfs06-filedrop/ClaimsReporting/Monthly Reporting/{end_date:%Y}/{end_date:%m%Y}/{end_date:%B %Y} - 25k Ocean Marine - ADM.xlsx"],
+        "ccopy": ["rraeder@markelcorp.com"],
+		"P_start_date":"{start_date:%x}",
+		"P_end_date":"{end_date:%x}",
+		"sum_start" : 13,
+		"sum_end" : 20,
+		"macro": "OceanMarine.OceanMarine"
+		},
+		
+"InlandMarineBuildersRisk$50k": {
+        "sql": "ADM-50K-Inland_Marine_Builders_Risk.sql",
+        "template": "TEMPLATE_50kInlandMarineBuildersRisk_ADM.xlsm",
+        "save_as": "{end_date:%B %Y} - 50k Inland Marine - ADM",
+        "recipients": ["mthompson@MarkelCorp.com"],
+        "subject": "$50K Incurred - Inland Marine - {end_date:%B %Y}",
+        "body": "Hello,\n\nAttached is the $50K Inland Marine {end_date:%B %Y} incurred report requested through the Claims Advocate program. The claims are filtered by open and any claims that were closed in {end_date:%B %Y} (month-end close). We currently cannot provide the MTD for PRIMIS claims.\n\nThis report was generated using the following parameters:\nProduct Line Name: Inland Marine AND Current Period AND Gross AND ( Claim Closed Date: Between {start_date:%x} and {end_date:%x} OR Claim Status: Open ). \n\nCase Incurred Loss and ALAE Net of Recoveries Amount - Cumulative: Greater than or equal to 50,000.\n\nShould you have any questions, please feel free to contact me.\n\nHave a great day!\nWill Han",
+        "attachs": ["//MKLFILE/CLAIMS/corpfs06-filedrop/ClaimsReporting/Monthly Reporting/{end_date:%Y}/{end_date:%m%Y}/{end_date:%B %Y} - 50k Inland Marine - ADM.xlsx"],
+        "ccopy": ["dwashburn@markelcorp.com"],
+		"P_start_date":"{start_date:%x}",
+		"P_end_date":"{end_date:%x}",
+		"sum_start" : 12,
+		"sum_end" : 19,
+		"macro": "InlandMarine.InlandMarine"
+		},
+		
+"InlandMarineBuildersRisk$25k": {
+        "sql": "ADM-25K-Inland_Marine_Builders_Risk.sql",
+        "template": "TEMPLATE_25kInlandMarineBuildersRisk_ADM.xlsm",
+        "save_as": "{end_date:%B %Y} - 25k Inland Marine - ADM",
+        "recipients": ["mthompson@MarkelCorp.com", "samuel.rizzitelli@markel.com"],
+        "subject": "$25K Incurred - Inland Marine - {end_date:%B %Y}",
+        "body": "Hello,\n\nAttached is the $25K Inland Marine {end_date:%B %Y} incurred report requested through the Claims Advocate program. The claims are filtered by open and any claims that were closed in {end_date:%B %Y} (month-end close). We currently cannot provide the MTD for PRIMIS claims.\n\nThis report was generated using the following parameters:\nProduct Line Name: Inland Marine AND Current Period AND Gross AND ( Claim Closed Date: Between {start_date:%x} and {end_date:%x} OR Claim Status: Open ). \n\nCase Incurred Loss and ALAE Net of Recoveries Amount - Cumulative: Greater than or equal to 25,000.\n\nShould you have any questions, please feel free to contact me.\n\nHave a great day!\nWill Han",
+        "attachs": ["//MKLFILE/CLAIMS/corpfs06-filedrop/ClaimsReporting/Monthly Reporting/{end_date:%Y}/{end_date:%m%Y}/{end_date:%B %Y} - 25k Inland Marine - ADM.xlsx"],
+        "ccopy": ["dwashburn@markelcorp.com"],
+		"P_start_date":"{start_date:%x}",
+		"P_end_date":"{end_date:%x}",
+		"sum_start" : 12,
+		"sum_end" : 19,
+		"macro": "InlandMarine25k.InlandMarine25k"
+		},
+
+"BrokeragePropMidsouth$50k": {
+        "sql": "ADM-50K-Brokerage_Property_Midsouth.sql",
+        "template": "TEMPLATE_50kBrokeragePropertyMidsouth_ADM.xlsm",
+        "save_as": "{end_date:%B %Y} - 50k Brokerage Property Midsouth - ADM",
+        "recipients": ["John.Warren@markelcorp.com", "CWalker@MarkelCorp.com"],
+        "subject": "$50K Total Incurred Report - Brokerage Property Midsouth - {end_date:%B %Y}",
+        "body": "Hello,\n\nAttached is the $50K Total Incurred Report for Brokerage Property – Midsouth. The report has been filtered by open and any claims that were closed in {end_date:%B %Y} system month end (Midsouth Region). We currently cannot provide the MTD for PRIMIS claims.\n\nThis report was generated using the following parameters:\nProduct Line Name: Brokerage Inland Marine AND Gross AND ( Claim Closed Date: Between {start_date:%x} and {end_date:%x} OR Claim Status: Open ) AND Case Incurred Loss and ALAE Net of Recoveries Amount - Cumulative: Greater than or equal to 50,000 AND Producer Region Name: Mid South AND Current Period.\nDate of Loss: Descending order.\n\nShould you have any questions, please feel free to contact me.\n\nHave a great day!\nWill Han",
+        "attachs": ["//MKLFILE/CLAIMS/corpfs06-filedrop/ClaimsReporting/Monthly Reporting/{end_date:%Y}/{end_date:%m%Y}/{end_date:%B %Y} - 50k Brokerage Property Midsouth - ADM.xlsx"],
+        "ccopy": ["dwashburn@markelcorp.com"],
+		"P_start_date":"{start_date:%x}",
+		"P_end_date":"{end_date:%x}",
+		"sum_start": 15,
+		"sum_end": 22,
+		"macro": "BrokerageProp.BrokerageProp"
+		}
+
+}
