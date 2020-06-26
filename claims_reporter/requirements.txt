@@ -53,7 +53,7 @@ matplotlib==2.0.2
 more-itertools==3.2.0
 nbformat==4.4.0
 nflgame==1.2.20
-nltk==3.2.4
+nltk==3.4.5
 numpy==1.13.1+mkl
 nyt-docket==0.0.14
 openpyxl==2.4.8
