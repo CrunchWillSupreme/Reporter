@@ -16,7 +16,7 @@ chardet==3.0.4
 Click==7.0
 clint==0.5.1
 cmake==0.8.0
-cryptography==2.3.1
+cryptography==3.2
 csvkit==1.0.2
 cx-Oracle==6.3.1
 cycler==0.10.0
