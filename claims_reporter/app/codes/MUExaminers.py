@@ -7,9 +7,9 @@ from openpyxl import load_workbook
 
 def main():
     today = datetime.datetime.today()
-    path = r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Matter_Upload\Files\data\ExaminerUpdates\ExaminerUpdateFormula.xlsm'
+    path = r'\PATH\TO\FILE\ExaminerUpdateFormula.xlsm'
     macro = 'MUExaminer.MUExaminer'
-    saveas = r"\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Matter_Upload\Files\data\ExaminerUpdates\UnMapped_Examiners_{today:%m_%d_%y}.xlsx".format(today = today)
+    saveas = r"\\PATH\TO\FILE\UnMapped_Examiners_{today:%m_%d_%y}.xlsx".format(today = today)
     sql = read_sql()
     data = run_query(sql)
     save_excel(data)
@@ -20,13 +20,13 @@ def read_sql():
     last_month = Today - datetime.timedelta(days=30)
     last_run = last_month.strftime('%Y-%m-%d')
     print('Reading ExaminerUpdate.sql file...')
-    with open(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Matter_Upload\SQL\ExaminerUpdate.sql') as f:
+    with open(r'\\PATH\TO\FILE\ExaminerUpdate.sql') as f:
         sql = f.read().format(last_run=last_run)
         print('SQL file read.')
     return sql
 
 def run_query(sql):
-    cnn = pyodbc.connect('DRIVER={SQL Server};PORT=1433;SERVER=VA1-PCORSQL210,21644')
+    cnn = pyodbc.connect('DRIVER={SQL Server};PORT=1433;SERVER=[SERVER_ADDRESS]')
     print('Running SQL query...')
     data = pd.read_sql(sql, cnn)
     print('SQL query finished running')
@@ -36,14 +36,14 @@ def save_excel(data):
     print('Beginning savewb method...')
     rngoutput = data.values.tolist()
     print('Sheet added!\nRetrieving TEMPLATE workbook')
-    wb = load_workbook(r"\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Matter_Upload\Files\data\ExaminerUpdates\ExaminerUpdateFormulaTemplate.xlsm", keep_vba=True)
+    wb = load_workbook(r"\\PATH\TO\FILE\ExaminerUpdateFormulaTemplate.xlsm", keep_vba=True)
     print("TEMPLATE workbook retrieved! \nPasting df output onto Excel sheet..")
     ws=wb.get_sheet_by_name('Sheet1')
     for row_num, row in enumerate(rngoutput):
         for col_num,val in enumerate(row):
             ws.cell(row=row_num+2,column=col_num+1).value=val #python is zero-indexed, openpyxl is 1-indexed
     print("output pasted onto sheet!\nSaving workbook...")                    
-    wb.save(r"\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Matter_Upload\Files\data\ExaminerUpdates\ExaminerUpdateFormula.xlsm")
+    wb.save(r"\\PATH\TO\FILE\ExaminerUpdateFormula.xlsm")
     print('Workbook Saved!')
 
 def call_macro(wb_path, macro_name,*args, save_path = None):
@@ -83,8 +83,8 @@ def call_macro(wb_path, macro_name,*args, save_path = None):
     print('saving')
     if save_path is not None:
          xl.Application.Run(f'{wb.Name}!Savexlsx', save_path)
-#         subprocess.call([r"C:\Program Files\AutoHotkey\AutoHotkey.exe", r"\\Mklfile\claims\corpfs06-filedrop\ClaimsReporting\Projects\CAT-Automate\CAT_files\Enter.ahk"])
-#         process = subprocess.Popen([r"C:\Program Files\AutoHotkey\AutoHotkey.exe",r"\\Mklfile\claims\corpfs06-filedrop\ClaimsReporting\Projects\CAT-Automate\CAT_files\Enter.ahk"])
+#         subprocess.call([r"PATH\TO\FILE\AutoHotkey.exe", r"\\PATH\TO\FILE\Enter.ahk"])
+#         process = subprocess.Popen([r"PATH\TO\FILE\AutoHotkey.exe",r"\\PATH\TO\FILE\Enter.ahk"])
 #         process.wait()
     #cleanup
     print('quitting')
