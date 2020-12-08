@@ -29,8 +29,8 @@ import ctypes
 def main(username, password, sendmail=False):
     #Set Directory
     theday = datetime.date.today()
-    print(f"Setting directory to folder: \ClaimsReporting\Acknowledgment Letter Add In\Input\{theday.year}\{datetime.datetime.strftime(theday,'%B')}")
-    os.chdir(f"//MKLFILE/CLAIMS/corpfs06-filedrop/ClaimsReporting/Acknowledgment Letter Add In/Input/{theday.year}/{datetime.datetime.strftime(theday,'%B')}/")
+    print(f"Setting directory to folder: \PATH\TO\INPUT\{theday.year}\{datetime.datetime.strftime(theday,'%B')}")
+    os.chdir(f"//PATH/TO/INPUT/{theday.year}/{datetime.datetime.strftime(theday,'%B')}/")
     #Create variable for date
     try:
         Primisclaims = cleanclaimnumber('Primis')
@@ -48,16 +48,16 @@ def main(username, password, sendmail=False):
     except FileNotFoundError:
         print("No ICON claims for today!")
     if sendmail:
-#        recipients = ['sakers@markelcorp.com',]
-#        cc = ['dholland@markelcorp.com','pcrawford@markelcorp.com', 'rkincaid@markelcorp.com']
-        recipients = ['sakers@markelcorp.com']
-        cc = ['whan@markelcorp.com','claimstechnology@markel.com']
+#        recipients = ['USER@COMPANY.com',]
+#        cc = ['USER@COMPANY.com','USER@COMPANY.com', 'USER@COMPANY.com']
+        recipients = ['USER@COMPANY.com']
+        cc = ['USER@COMPANY.com','USER@COMPANY.com']
         subject = "Primis and ICON data request for Acknowledgement letters"
-        body = "Hi Sherry,\n\nAttached you will find the ICON and PRIMIS extracts for the Acknowledgement letters.  Please let me know if you have any questions.\n\nThanks,\nWill Han"
+        body = "Hi USER,\n\nAttached you will find the ICON and PRIMIS extracts for the Acknowledgement letters.  Please let me know if you have any questions.\n\nThanks,\nWill Han"
         #Set up crap for the attachments
         #FOR ICON AND PRIMIS
-        files = [r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Acknowledgment Letter Add In\{0:%Y}\{0:%B}\{1} ICON Ack Letter Extract.xlsx'.format((theday),gettoday(False)),
-                            r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Acknowledgment Letter Add In\{0:%Y}\{0:%B}\{1} Primis Ack Letter Extract.xlsx'.format((theday),gettoday(False))]
+        files = [r'\\PATH\TO\FILE\{0:%Y}\{0:%B}\{1} ICON Ack Letter Extract.xlsx'.format((theday),gettoday(False)),
+                            r'\\PATH\TO\FILE\{0:%Y}\{0:%B}\{1} Primis Ack Letter Extract.xlsx'.format((theday),gettoday(False))]
         
         mail(recipients, subject, body, files, username, password, cc)
     Mbox("Report Finished!","Your report has finished running!") 
@@ -77,10 +77,10 @@ def gettoday(one=True):  #if we want today2, pass "False"
 
 
 def create_folder():
-    newinputpath= f"//MKLFILE/CLAIMS/corpfs06-filedrop/ClaimsReporting/Acknowledgment Letter Add In/Input/{datetime.date.today().year}/{datetime.datetime.strftime(datetime.date.today(),'%B')}/"
+    newinputpath= f"//PATH/TO/INPUT/{datetime.date.today().year}/{datetime.datetime.strftime(datetime.date.today(),'%B')}/"
     if not os.path.exists(newinputpath):
         os.makedirs(newinputpath)
-    newreportpath= f"//MKLFILE/CLAIMS/corpfs06-filedrop/ClaimsReporting/Acknowledgment Letter Add In/{datetime.date.today().year}/{datetime.datetime.strftime(datetime.date.today(),'%B')}/"
+    newreportpath= f"//PATH/TO/REPORT/{datetime.date.today().year}/{datetime.datetime.strftime(datetime.date.today(),'%B')}/"
     if not os.path.exists(newreportpath):
         os.makedirs(newreportpath)
         
@@ -97,7 +97,7 @@ def cleanclaimnumber(source):
     print(source+ " claim numbers formatted!")
     return claims
 #source='ICON'
-#path = f"//MKLFILE/CLAIMS/corpfs06-filedrop/ClaimsReporting/Acknowledgment Letter Add In/Input/{datetime.date.today().year}/{datetime.datetime.strftime(datetime.date.today(),'%B')}/"+source+" "+gettoday()+".xlsx"
+#path = f"//PATH/TO/INPUT/{datetime.date.today().year}/{datetime.datetime.strftime(datetime.date.today(),'%B')}/"+source+" "+gettoday()+".xlsx"
 #path = os.path.realpath(path)
 #os.startfile(path)
 
@@ -269,7 +269,7 @@ def getPrimisquery(Primisclaims):
 def runqueryandexcel(source, query, finalquery):
     #Create Connection
     print('Creating server connection...')
-    DataLakeserver = 'VA1-PCORSQL210,21644'
+    DataLakeserver = '[SERVER_ADDRESS]'
     driver = '{SQL Server}'    # Driver you need to connect to the database
     port = '1433'
     DataLakecnn = pyodbc.connect('DRIVER='+driver+';PORT='+port+';SERVER='+DataLakeserver)
@@ -284,7 +284,7 @@ def runqueryandexcel(source, query, finalquery):
 
     rngoutput = output.values.tolist()
     print('Sheet added!\nRetrieving TEMPLATE workbook')
-    wb = load_workbook(r"\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Acknowledgment Letter Add In\Input\Ack_Template.xlsx")
+    wb = load_workbook(r"\\PATH\TO\INPUT\Ack_Template.xlsx")
     print("TEMPLATE workbook retrieved! \nPasting "+source+" output onto Excel sheet..")
     ws=wb.get_sheet_by_name('Extract')
     for row_num, row in enumerate(rngoutput):
@@ -293,7 +293,7 @@ def runqueryandexcel(source, query, finalquery):
     print(source+" output pasted onto sheet!")                    
 
     print('Sheet name updated! \nSaving workbook...')
-    wb.save(r"//MKLFILE/CLAIMS/corpfs06-filedrop/ClaimsReporting/Acknowledgment Letter Add In/{thedate:%Y}/{thedate:%B}/{today} {source} Ack Letter Extract.xlsx".format(thedate=datetime.date.today(),today=gettoday(False),source=source))
+    wb.save(r"//PATH/TO/OUTPUT/{thedate:%Y}/{thedate:%B}/{today} {source} Ack Letter Extract.xlsx".format(thedate=datetime.date.today(),today=gettoday(False),source=source))
     print('Workbook Saved!')    
 
 
@@ -312,7 +312,7 @@ def mail(to, subject, body, files, username, password, cc=None):
     msg['From'] = username
     msg['To'] = ", ".join(to)
     msg['CC'] = ", ".join(cc)
-    bcc=['whan@markelcorp.com',username]
+    bcc=['USER@COMPANY.com',username]
     msg['Subject'] = subject
     print('Adding body of message...')
     msg.attach(MIMEText(body))
@@ -347,9 +347,9 @@ def Mbox(title, text):
     return ctypes.windll.user32.MessageBoxW(0, text, title, 0)
    
 #PRIMIS ONLY
-#files = [r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Acknowledgment Letter Add In\{0} Primis Ack Letter Extract.xlsx'.format(today2)]
+#files = [r'\\PATH\TO\FILES\{0} Primis Ack Letter Extract.xlsx'.format(today2)]
 #ICON ONLY
-#files = [r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Acknowledgment Letter Add In\{0} ICON Ack Letter Extract.xlsx'.format(today2)]
+#files = [r'\\PATH\TO\FILES\{0} ICON Ack Letter Extract.xlsx'.format(today2)]
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(sys.argv)
