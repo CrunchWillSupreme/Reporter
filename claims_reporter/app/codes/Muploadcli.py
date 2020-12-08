@@ -19,30 +19,30 @@ def main(email_user, email_pwd, send_mail:bool=False):
     day=str(d.strftime('%d'))
     year= str(d.year)
     today= year + '_' + month + '_' + day
-    cnn = pyodbc.connect('DRIVER={SQL Server};PORT=1433;SERVER=VA1-PCORSQL210,21644')
+    cnn = pyodbc.connect('DRIVER={SQL Server};PORT=1433;SERVER=[SERVER_ADDRESS]')
     run_temp_tables(cnn)
     DF = run_query(cnn)
     write_excel(DF, year, today)
     if send_mail:
-        recipients = ['kristine.riddick@markel.com']
-        cc = ['claimsvmo@markelcorp.com']
+        recipients = ['USER@EMAIL.com']
+        cc = ['USER@EMAIL.com']
         subject = "LeX Matter Upload " + today
-        body = "Hi Kristine,\n\nAttached you will find this week's LeX Matter Upload.  Please let me know if you have any questions.\n\nThanks,\nWill Han"
+        body = "Hi USER,\n\nAttached you will find this week's LeX Matter Upload.  Please let me know if you have any questions.\n\nThanks,\nWill Han"
         #Set up crap for the attachments
-        files = [r"\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Matter_Upload\Files\reports\{year}\{today} LeX Matter Upload.xlsx".format(year = year, today = today)]
+        files = [r"\\PATH\TO\FILE\{year}\{today} LeX Matter Upload.xlsx".format(year = year, today = today)]
         email(email_user, email_pwd, recipients, cc, subject, body, files)
         
 def run_temp_tables(cnn):
     print('Reading in temp tables..')
-    with open(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Matter_Upload\SQL\forPython\base.sql') as b:
+    with open(r'\\PATH\TO\FILE\base.sql') as b:
         base = b.read()
-    with open(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Matter_Upload\SQL\forPython\substit.sql') as s:
+    with open(r'\\PATH\TO\FILE\substit.sql') as s:
         substit = s.read()
-    with open(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Matter_Upload\SQL\forPython\types.sql') as t:
+    with open(r'\\PATH\TO\FILE\types.sql') as t:
         types = t.read()
-    with open(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Matter_Upload\SQL\forPython\deduct.sql') as d:
+    with open(r'\\PATH\TO\FILE\deduct.sql') as d:
         deduct = d.read()
-    with open(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Matter_Upload\SQL\forPython\smash.sql') as m:
+    with open(r'\\PATH\TO\FILE\smash.sql') as m:
         smash = m.read()
     print('Temp tables read! Executing temp table queries..')
     cursor = cnn.cursor()
@@ -62,15 +62,15 @@ def run_query(cnn):
 def write_excel(df, year, today):
     print('Writing data to Excel..')
     rngMupload = df.values.tolist()
-    wb = load_workbook(r'\\Mklfile\claims\corpfs06-filedrop\ClaimsReporting\Projects\Matter_Upload\Files\data\Matter_Upload_Template.xlsx')
+    wb = load_workbook(r'\\PATH\TO\FILE\Matter_Upload_Template.xlsx')
     ws=wb.get_sheet_by_name('template')
     for row_num, row in enumerate(rngMupload):
         for col_num,val in enumerate(row):
             ws.cell(row=row_num+2,column=col_num+1).value=val
     print('Sheet name updated! \nSaving workbook...')
-    wb.save(r"\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Matter_Upload\Files\reports\{year}\{today} LeX Matter Upload.xlsx".format(year=year, today = today))
+    wb.save(r"\\PATH\TO\FILE\{year}\{today} LeX Matter Upload.xlsx".format(year=year, today = today))
     print('Workbook Saved!')
-#x=f"\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Matter_Upload\Files\reports\{year}\{today} LeX Matter Upload.xlsx"
+#x=f"\\PATH\TO\FILE\{year}\{today} LeX Matter Upload.xlsx"
 
 def set_server(email_user, email_pwd):
     print('Setting up server...')   
@@ -88,7 +88,7 @@ def email(email_user, email_pwd, to, cc, subject, text, attach):
     msg['From'] = email_user
     msg['To'] = ", ".join(to)
     msg['CC'] = ", ".join(cc)
-    bcc=['whan@markelcorp.com']
+    bcc=['USER@EMAIL.com']
     msg['Subject'] = subject
     print('Adding body of message...')
     msg.attach(MIMEText(text))
