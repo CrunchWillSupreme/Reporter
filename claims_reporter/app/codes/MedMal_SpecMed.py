@@ -13,14 +13,14 @@ def main(email_user, email_pwd, datestring, sendmail:bool=False):
     d_string = date_format(datestring)
     start_date, end_date = get_open_and_closed_dates(schedule, dates_for=d_string)
     create_folder(end_date)
-    cnn = pyodbc.connect('DRIVER={SQL Server}; PORT=1433; SERVER=VA1-PCORSQL191,21612')
+    cnn = pyodbc.connect('DRIVER={SQL Server}; PORT=1433; SERVER=[SERVER_ADDRESS]')
     df = run_queries(cnn, end_date)
     excel_save(df, end_date)
     if sendmail:
         send_email(email_user, email_pwd, end_date)
   
 def get_json():
-    with open(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Monthly_Cognos_Reports\Files\schedule.json') as s:
+    with open(r'\\PATH\TO\FILE\schedule.json') as s:
         schedule = json.loads(s.read())
     return schedule
 
@@ -37,10 +37,10 @@ def get_open_and_closed_dates(schedule:dict, dates_for:datetime.date=datetime.da
 
 def create_folder(end_date):
 	"""
-	this function will look to see if the path, MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Monthly Reporting\{end_date:%Y}\{end_date:%m%Y}, exists.  If it doesn't, it will create the folder.  Else, nothing.
+	this function will look to see if the path, PATH\TO\FILE\{end_date:%Y}\{end_date:%m%Y}, exists.  If it doesn't, it will create the folder.  Else, nothing.
 	"""
 	
-	newpathmonth = r"\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Ad Hoc Reporting\{end_date:%Y}\Jagady Blue - Spec Med & Med Mal".format(end_date=end_date)
+	newpathmonth = r"\\PATH\TO\FILE\{end_date:%Y}\Jagady Blue - Spec Med & Med Mal".format(end_date=end_date)
 	if not os.path.exists(newpathmonth):
 		os.makedirs(newpathmonth)
         
@@ -65,7 +65,7 @@ def run_queries(cnn, end_date):
 def excel_save(DF, end_date):
     rngDF = DF.values.tolist()
     print('Retrieving TEMPLATE workbook')
-    wb = load_workbook(r'\\Mklfile\claims\corpfs06-filedrop\ClaimsReporting\Projects\Monthly_Cognos_Reports\Templates\TEMPLATE_MedMal_SpecMed.xlsx')
+    wb = load_workbook(r'\\PATH\TO\FILE\TEMPLATE_MedMal_SpecMed.xlsx')
     print('TEMPLATE workbook retrieved! \nPasting muploadDF onto Excel sheet..')
     ws=wb.get_sheet_by_name('Sheet1')
     for row_num, row in enumerate(rngDF):
@@ -73,7 +73,7 @@ def excel_save(DF, end_date):
             ws.cell(row=row_num+2,column=col_num+1).value=val #python is zero-indexed, openpyxl is 1-indexed
     print('MedMalDF pasted onto sheet!')   
     print('Sheet name updated! \nSaving workbook...')
-    wb.save(r"\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Ad Hoc Reporting\{end_date:%Y}\Jagady Blue - Spec Med & Med Mal\MedMal_SpecMed_{end_date:%b %Y}.xlsx".format(end_date = end_date))
+    wb.save(r"\\PATH\TO\FILE\Spec Med & Med Mal\MedMal_SpecMed_{end_date:%b %Y}.xlsx".format(end_date = end_date))
     print('Workbook Saved!')
 
 
@@ -290,13 +290,13 @@ def mail(email_user, email_pwd, to, subject, text, attach, cc=None):
 
 def send_email(email_user, email_pwd, end_date):
     #Parameters/arguments
-    recipients = ['jblue@markelcorp.com', 'pmoylan@markelcorp.com']
-    cc = ['rkincaid@markelcorp.com']
+    recipients = ['USER@EMAIL.com', 'USER@EMAIL.com']
+    cc = ['USER@EMAIL.com']
     subject = "{end_date:%b %Y} Spec Med Med Mal Report".format(end_date=end_date)
     body = "Hello,\n\nAttached you will find the Spec Med and Med Mal report for {end_date:%b %Y} MEFC.  If you have any questions, please feel free to contact me.\n\nThanks,\nWill Han".format(end_date = end_date)
     #Set up crap for the attachments
     #FOR ICON AND PRIMIS
-    files = [r"\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Ad Hoc Reporting\{end_date:%Y}\Jagady Blue - Spec Med & Med Mal\MedMal_SpecMed_{end_date:%b %Y}.xlsx".format(end_date = end_date)]
+    files = [r"\\PATH\TO\FILE\{end_date:%Y}\Jagady Blue - Spec Med & Med Mal\MedMal_SpecMed_{end_date:%b %Y}.xlsx".format(end_date = end_date)]
     mail(email_user, email_pwd, recipients, subject, body, files, cc)
 
 if __name__ == '__main__':
