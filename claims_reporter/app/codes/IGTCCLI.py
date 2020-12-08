@@ -20,17 +20,17 @@ def main(email_user, email_pwd, datestring, sendmail:bool=False):
     convert_date_type(PgmYr)
     Query_and_csv(recon, icon, end_date, PgmYr)
     #set up parameters for Macro function
-    path = r"\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Monthly_Cognos_Reports\TEMPLATES\TEMPLATEIGTCReportICONRECONITD.xlsm"
+    path = r"\PATH\TO\FILES\TEMPLATEIGTCReportICONRECONITD.xlsm"
     macro = 'IGTC.IGTC'
-    saveas = r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Monthly Reporting\{end_date:%Y}\{end_date:%m%Y}\IGTC Report - ICONRECON - ITD_{end_date:%m%Y}.xlsx'.format(end_date=end_date)
+    saveas = r'\\PATH\TO\FILES\{end_date:%Y}\{end_date:%m%Y}\IGTC Report - ICONRECON - ITD_{end_date:%m%Y}.xlsx'.format(end_date=end_date)
     #run Macro function
     call_macro(path,macro,save_path=saveas)
     if sendmail:
         #set up parameters for email function
-        recipients = ['MEOhern@markelcorp.com',]
-        #cc = ['pcrawford@markelcorp.com']
+        recipients = ['USER@EMAIL.com',]
+        #cc = ['USER@EMAIL.com']
         subject = "IGTC - Monthly Loss Report - {end_date:%B %Y}".format(end_date=end_date)
-        body = "Hello Mary,\n\nAttached you will find the IGTC - Monthly Loss Report as of {end_date:%m/%d/%Y}.  \n\nPlease follow the link, familiarize yourself with the webpage and bookmark it for your convenience.  Your report will be listed under the Monthly Reports tab.\nLink: http://mymarkelglobal/Departments/Claims/northamericaandbermuda/Pages/Metrics.aspx\n\nPlease let me know if there are any questions.\n\nThanks,\nWill Han".format(end_date=end_date)
+        body = "Hello USER,\n\nAttached you will find the IGTC - Monthly Loss Report as of {end_date:%m/%d/%Y}.  \n\nPlease follow the link, familiarize yourself with the webpage and bookmark it for your convenience.  Your report will be listed under the Monthly Reports tab.\nLink: http://mymarkelglobal/Departments/Claims/northamericaandbermuda/Pages/Metrics.aspx\n\nPlease let me know if there are any questions.\n\nThanks,\nWill Han".format(end_date=end_date)
         attach = [saveas]
         #run email function
         mail(recipients, subject, body, attach, email_user, email_pwd)
@@ -41,15 +41,15 @@ def main(email_user, email_pwd, datestring, sendmail:bool=False):
 #################### READ IN CONFIG FILES AND SQL FILES #######################
 ###############################################################################
 def get_files() -> tuple:
-	with open(r'P:\PersonalConfig\credentials.json') as c:
+	with open(r'PATH\TO\FILES\credentials.json') as c:
 		creds = json.loads(c.read())
-	with open(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Monthly_Cognos_Reports\Files\schedule.json') as f:
+	with open(r'\\PATH\TO\FILES\schedule.json') as f:
 		schedule = json.loads(f.read())
-	with open(r"\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Monthly_Cognos_Reports\Files\pgmYR.json") as p:
+	with open(r"\\PATH\TO\FILES\pgmYR.json") as p:
 		PgmYr = json.loads(p.read())
-	with open(r"\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Monthly_Cognos_Reports\SQL\Edited\ICON-IGTC_Report-ITD.sql") as i:
+	with open(r"\\PATH\TO\FILES\ICON-IGTC_Report-ITD.sql") as i:
 		icon = i.read()
-	with open(r"\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Monthly_Cognos_Reports\SQL\Edited\RECON-IGTC_Report-ITD.sql") as r:
+	with open(r"\\PATH\TO\FILES\RECON-IGTC_Report-ITD.sql") as r:
 		recon = r.read()
 	return creds, schedule, PgmYr, icon, recon
 		
@@ -67,7 +67,7 @@ def convert_date_type(PgmYr):
 			stuff[name] = datetime.datetime.strptime(dates, '%m/%d/%Y')
 
 def create_folder(end_date):
-	newpathmonth = r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Monthly Reporting\{end_date:%Y}\{end_date:%m%Y}'.format(end_date=end_date)
+	newpathmonth = r'\\PATH\TO\FILES\{end_date:%Y}\{end_date:%m%Y}'.format(end_date=end_date)
 	if not os.path.exists(newpathmonth):
 		os.makedirs(newpathmonth)
 ###############################################################################
@@ -76,11 +76,11 @@ def create_folder(end_date):
 def Query_and_csv(recon,icon,end_date,PgmYr):   
 	print('Creating connection to data lake server with pyodbc driver...')
 	# SQL SERVER/RECON
-	Reconcnxn = pyodbc.connect('DRIVER={SQL Server};PORT=1433;SERVER=VA1-PCORSQL210,21644')
+	Reconcnxn = pyodbc.connect('DRIVER={SQL Server};PORT=1433;SERVER=[SERVER_ADDRESS]')
 	print('Running Recon query...')
 	ReconDF = pd.read_sql(recon, Reconcnxn)
 	print('Recon query complete!')
-	#ReconDF.to_csv(r"\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Monthly_Cognos_Reports\TEMPLATES\TESTFOLDER\IGTCrecon.csv")
+	#ReconDF.to_csv(r"\\PATH\TO\FILES\IGTCrecon.csv")
 	# ORACLE/ICON
 	print('Creating connection to oracle with cx_oracle driver...')
 	ICONcnxn = cx_Oracle.connect('cog{end_date:%y%m}/cog{end_date:%y%m}@mklora601:21600/iconrpt.markelcorp.markelna.com'.format(end_date=end_date))
@@ -98,7 +98,7 @@ def Query_and_csv(recon,icon,end_date,PgmYr):
 
 	IGTC['Loss Date'] = IGTC['Loss Date'].apply(lambda x: datetime.datetime.strftime(x, '%Y-%m-%d'))
 	print('Saving dataframe to .csv...')
-	IGTC.to_csv(r"\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Monthly_Cognos_Reports\Files\csv\IGTC.csv", header = False, index = False)
+	IGTC.to_csv(r"\\PATH\TO\FILES\IGTC.csv", header = False, index = False)
 	print('csv saved!')
 
 def call_macro(wb_path, macro_name,*args, save_path = None):
@@ -138,8 +138,8 @@ def call_macro(wb_path, macro_name,*args, save_path = None):
     print('saving')
     if save_path is not None:
          xl.Application.Run(f'{wb.Name}!Savexlsx', save_path)
-#         subprocess.call([r"C:\Program Files\AutoHotkey\AutoHotkey.exe", r"\\Mklfile\claims\corpfs06-filedrop\ClaimsReporting\Projects\CAT-Automate\CAT_files\Enter.ahk"])
-#         process = subprocess.Popen([r"C:\Program Files\AutoHotkey\AutoHotkey.exe",r"\\Mklfile\claims\corpfs06-filedrop\ClaimsReporting\Projects\CAT-Automate\CAT_files\Enter.ahk"])
+#         subprocess.call([r"PATH\TO\FILES\AutoHotkey.exe", r"\\PATH\TO\FILES\Enter.ahk"])
+#         process = subprocess.Popen([r"PATH\TO\FILES\AutoHotkey.exe",r"\\PATH\TO\FILES\Enter.ahk"])
 #         process.wait()
     #cleanup
     print('quitting')
@@ -152,7 +152,7 @@ def mail(to, subject, text, attach, email_user, email_pwd):
     msg = MIMEMultipart()
     msg['From'] = email_user
     msg['To'] = ", ".join(to)
-    bcc=['whan@markelcorp.com']
+    bcc=['USER@EMAIL.com']
     msg['Subject'] = subject
     print('Adding body of message...')
     msg.attach(MIMEText(text))
