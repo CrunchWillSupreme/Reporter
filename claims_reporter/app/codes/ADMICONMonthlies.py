@@ -41,7 +41,7 @@ def main(email_user:str, email_pwd:str, datestring, sendmail:bool=False):
     format_config(CognosADM, start_date, end_date)
     format_config(CognosICON, start_date, end_date)
     create_folder(end_date)
-#    cnn = pyodbc.connect('DRIVER={SQL Server}; PORT=1433; SERVER=VA1-PCORSQL190,21627')
+#    cnn = pyodbc.connect('DRIVER={SQL Server}; PORT=1433; SERVER=[SQL_SERVER_ADDRESS]')
 #    print("Oracle Connection Established!")
 	
     rpts = []
@@ -190,21 +190,21 @@ class Report(object):
     
     def get_conn(self):
         print('Getting Connection...')
-        return pyodbc.connect('DRIVER={SQL Server}; PORT=1433; SERVER=VA1-PCORSQL190,21627')
+        return pyodbc.connect('DRIVER={SQL Server}; PORT=1433; SERVER=[SQL_SERVER_ADDRESS]')
         
     def run_report(self):
         query = self.get_query()
         cnn = self.get_conn()
         self.load_temp_tables(cnn)
         self.run_query(query,cnn)
-        saveas = r"\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Monthly Reporting\{end_date:%Y}\{end_date:%m%Y}\{save_as}.xlsx".format(end_date = self.end_date, save_as = self.save_as)
+        saveas = r"\\PATH\TO\MONTHLY\REPORTING\{end_date:%Y}\{end_date:%m%Y}\{save_as}.xlsx".format(end_date = self.end_date, save_as = self.save_as)
 #        formatted = self.format_df(df)
 #        self.savewb(formatted)
         self.call_macro(save_path=saveas)
 
     def get_query(self):
         print('Getting Query '+self.sql_file)
-        with open(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Monthly_Cognos_Reports\SQL\Edited\{0}'.format(self.sql_file)) as f:
+        with open(r'\\PATH\TO\PROJECTS\{0}'.format(self.sql_file)) as f:
             query=f.read()
         return query
     
@@ -225,7 +225,7 @@ class Report(object):
             df=pd.read_sql(query, cnn, params=(self.start_date.strftime("%x"), self.end_date.strftime("%x")))
         except DatabaseError: 
             df=pd.read_sql(query, cnn) ##FOR QUERIES THAT DON'T HAVE DATE PARAMETERS
-        df.to_csv(r"\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Monthly_Cognos_Reports\Files\csv\{0}.csv".format(self.sql_file[:-4]), header = False, index = False)
+        df.to_csv(r"\\PATH\TO\PROJECTS\{0}.csv".format(self.sql_file[:-4]), header = False, index = False)
         print(self.sql_file[:-4]+' .csv Saved!')
 
     def call_macro(self, *args, save_path = None):
@@ -251,7 +251,7 @@ class Report(object):
         xl = win32com.client.Dispatch("Excel.Application")
         print(f'loaded excel as "{xl}".')
         #grab actual workbook
-        wb = xl.Workbooks.Open(Filename=r"\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Monthly_Cognos_Reports\TEMPLATES\{0}".format(self.template_file))
+        wb = xl.Workbooks.Open(Filename=r"\\PATH\TO\TEMPLATES\{0}".format(self.template_file))
         
         print(f'loaded workbook as "{wb.Name}"')
         #call macro from workbook
@@ -265,8 +265,8 @@ class Report(object):
         print('saving')
         if save_path is not None:
             xl.Application.Run(f'{wb.Name}!Savexlsx', save_path)
-        #         subprocess.call([r"C:\Program Files\AutoHotkey\AutoHotkey.exe", r"\\Mklfile\claims\corpfs06-filedrop\ClaimsReporting\Projects\CAT-Automate\CAT_files\Enter.ahk"])
-        #         process = subprocess.Popen([r"C:\Program Files\AutoHotkey\AutoHotkey.exe",r"\\Mklfile\claims\corpfs06-filedrop\ClaimsReporting\Projects\CAT-Automate\CAT_files\Enter.ahk"])
+        #         subprocess.call([r"C:\Program Files\AutoHotkey\AutoHotkey.exe", r"\\PATH\TO\\Enter.ahk"])
+        #         process = subprocess.Popen([r"C:\Program Files\AutoHotkey\AutoHotkey.exe",r"\\PATH\TO\Enter.ahk"])
         #         process.wait()
         #cleanup
         print('quitting')
@@ -286,14 +286,14 @@ class Report(object):
 #        print('Beginning savewb method...')
 #        rngoutput = formatted.values.tolist()
 #        print('Sheet added!\nRetrieving TEMPLATE workbook')
-#        wb = load_workbook(r"\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Monthly_Cognos_Reports\TEMPLATES\{0}".format(self.template_file))
+#        wb = load_workbook(r"\\PATH\TO\TEMPLATES\{0}".format(self.template_file))
 #        print("TEMPLATE workbook retrieved! \nPasting df output onto Excel sheet..")
 #        ws=wb.get_sheet_by_name('Page1')
 #        for row_num, row in enumerate(rngoutput):
 #            for col_num,val in enumerate(row):
 #                ws.cell(row=row_num+5,column=col_num+1).value=val #python is zero-indexed, openpyxl is 1-indexed
 #        print(self.sql_file[:-4]+" output pasted onto sheet!\nSaving workbook...")                    
-#        wb.save(r"\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Monthly Reporting\{end_date:%Y}\test\{end_date:%m%Y}\{save_as}.xlsx".format(end_date = self.end_date, save_as=self.save_as))
+#        wb.save(r"\\PATH\TO\MONTHLY\REPORTING\{end_date:%Y}\test\{end_date:%m%Y}\{save_as}.xlsx".format(end_date = self.end_date, save_as=self.save_as))
 #        print(self.sql_file[:-4]+' Workbook Saved!')
     
     def send_email(self, email_user, email_pwd):
@@ -336,18 +336,18 @@ class ICONReport(Report):
     Sub class of Report to run ICON connection with oracle
     """
     def get_conn(self):
-        connection = cx_Oracle.connect('cog{end_date:%y%m}/cog{end_date:%y%m}@mklora601:21600/iconrpt.markelcorp.markelna.com'.format(end_date=self.end_date))
+        connection = cx_Oracle.connect('cog{end_date:%y%m}/cog{end_date:%y%m}@[ADDRESS:PORT]/[PARAMETER]'.format(end_date=self.end_date))
         return connection    
         
 def get_json():
     """
     this function gets the config files, CognosADMfiles.json and schedule.json, and loads them in as a dictionary.
     """	
-    with open(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Monthly_Cognos_Reports\Files\CLI with VBA\CognosADMFiles.json') as f:
+    with open(r'\\PATH\TO\CONFIG\CognosADMFiles.json') as f:
         CognosADM = json.loads(f.read())
-    with open(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Monthly_Cognos_Reports\Files\CLI with VBA\CognosIconFiles.json') as f:
+    with open(r'\\PATH\TO\CONFIG\CognosIconFiles.json') as f:
         CognosICON = json.loads(f.read()) 
-    with open(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Monthly_Cognos_Reports\Files\schedule.json') as s:
+    with open(r'\\PATH\TO\CONFIG\schedule.json') as s:
         schedule = json.loads(s.read())
     return CognosADM, CognosICON, schedule
 
@@ -387,10 +387,10 @@ def format_config(CognosDict:dict, start_date, end_date):
 
 def create_folder(end_date):
 	"""
-	this function will look to see if the path, MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Monthly Reporting\{end_date:%Y}\{end_date:%m%Y}, exists.  If it doesn't, it will create the folder.  Else, nothing.
+	this function will look to see if the path, PATH\TO\MONTHLY\REPORTING\{end_date:%Y}\{end_date:%m%Y}, exists.  If it doesn't, it will create the folder.  Else, nothing.
 	"""
 	
-	newpathmonth = r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Monthly Reporting\{end_date:%Y}\{end_date:%m%Y}'.format(end_date=end_date)
+	newpathmonth = r'\\ PATH\TO\MONTHLY\REPORTING\{end_date:%Y}\{end_date:%m%Y}'.format(end_date=end_date)
 	if not os.path.exists(newpathmonth):
 		os.makedirs(newpathmonth)
 
