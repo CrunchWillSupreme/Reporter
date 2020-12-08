@@ -27,24 +27,24 @@ def main(email_user, email_pwd, sendmail=False):
     day=str(d.strftime('%d'))
     year= str(d.year)
     today= year + '-' + month + '-' + day
-    path = r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\CAT-Automate\CAT_files\CATReportTEMPLATEtest.xlsm'
+    path = r'\\PATH\TO\FILES\CATReportTEMPLATEtest.xlsm'
     macro = 'Dump_Final.Dump_Final'
-    saveas = r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Ad Hoc Reporting\{year}\CAT\Reports\{today} - CAT Master Report.xlsx'.format(year=year, today=today)
-    recipients = ['claimscatreporting@markelcorp.com']
-    cc = ['john.thomas@markel.com','joe.bizzarri@markel.com']
+    saveas = r'\\PATH\TO\FILES\{year}\CAT\Reports\{today} - CAT Master Report.xlsx'.format(year=year, today=today)
+    recipients = ['USER@EMAIL.com']
+    cc = ['USER@EMAIL.com','USER@EMAIL.com']
     subject = f"CAT Master Report - {today}"
-    body = "Hi JT,\n\nAttached you will find this week's CAT Master report.  It is also saved in the Ad Hoc Folder.\n\nThanks,\nWill Han"
+    body = "Hi USER,\n\nAttached you will find this week's CAT Master report.  It is also saved in the Ad Hoc Folder.\n\nThanks,\nWill Han"
     #Set up crap for the attachments
-    attach = [r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Ad Hoc Reporting\{year}\CAT\Reports\{today} - CAT Master Report.xlsx'.format(year=year, today=today)]
+    attach = [r'\\PATH\TO\FILES\{year}\CAT\Reports\{today} - CAT Master Report.xlsx'.format(year=year, today=today)]
     CCONfile='CCON_05_24_2019.sql'
     ICONfile='ICON_05_24_2019.sql'
     MPLfile='MPL_05_24_2019.sql'
     ODSfile='ODS_03_27_2018.sql'
     Maverickfile='Maverick_01_23_2019.sql'
-    DataLakeCNN = pyodbc.connect('DRIVER={SQL Server};PORT=1433;SERVER=VA1-PCORSQL210,21644')
-    ClaimsCNN = pyodbc.connect('DRIVER={SQL Server};PORT=1433;SERVER=VA1-PCORSQL191,21612')
-    OpermartCNN = pyodbc.connect('DRIVER={SQL Server};PORT=1433;SERVER=MKLSQL106,21625')
-    ERMSCNN = pyodbc.connect('DRIVER={SQL Server};PORT=1433;SERVER=va1-pgmrsql076')
+    DataLakeCNN = pyodbc.connect('DRIVER={SQL Server};PORT=1433;SERVER=[SERVER_ADDRESS]')
+    ClaimsCNN = pyodbc.connect('DRIVER={SQL Server};PORT=1433;SERVER=[SERVER_ADDRESS]')
+    OpermartCNN = pyodbc.connect('DRIVER={SQL Server};PORT=1433;SERVER=[SERVER_ADDRESS]')
+    ERMSCNN = pyodbc.connect('DRIVER={SQL Server};PORT=1433;SERVER=[SERVER_ADDRESS]')
 #    MPL_SP(ClaimsCNN)
     #run queries
     print('Beginning MPL CAT Query...')
@@ -96,7 +96,7 @@ def main(email_user, email_pwd, sendmail=False):
     print('This script took ' + str(endTime - startTime) + ' minutes to complete!')
 
 def queryDB(filename,CNN):
-    with open(r'P:\GitHub\claims_reporter\SQL\CAT\%s' % filename) as f:
+    with open(r'PATH\TO\FILES\%s' % filename) as f:
         query=f.read()
     dfName = pd.read_sql(query,CNN)
     return dfName
@@ -111,7 +111,7 @@ def queryDB(filename,CNN):
 	
 def Eclipse_prep():
     print('Reading in Eclipse Data...')
-    xls = pd.ExcelFile(r'\\Mklfile\claims\corpfs06-filedrop\ClaimsReporting\Projects\CAT-Automate\CAT_files\EFormatter.xlsx')
+    xls = pd.ExcelFile(r'\\PATH\TO\FILES\EFormatter.xlsx')
     EclipseBackup = pd.read_excel(xls, 'EclipseFormatter', skiprows = 0, na_filter=False) #read in Eclipse data
     print('Eclipse Data Read! \nRenaming Column...')
     EclipseBackup.rename(columns={'Total Incurred':'Total Incurred (incl. ACR)'}, inplace=True) #Rename column 
@@ -278,7 +278,7 @@ def ERMSprep(ERMSCNN):
     return ERMSBackup
 
 def ERMSprep2():
-    ERMSBackup = pd.read_excel(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Ad Hoc Reporting\2019\CAT\ERMS Data 862019 (002).xlsx', header = 0)
+    ERMSBackup = pd.read_excel(r'\\PATH\TO\FILES\ERMS Data 862019 (002).xlsx', header = 0)
     return ERMSBackup
 
 
@@ -330,14 +330,14 @@ def combine_DF_and_csv(ICONDF, ODSDF, MPLDF, EclipseDF, ERMSDF, CCONDF, Maverick
 	###-*-*-*-*- WRITE TO CSV -*-*-*-*-###
 	######################################################
     print('Writing to CSV''s...')
-    combinedDF.to_csv(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\CAT-Automate\CAT_files\Backups\combined.csv', header=False, index=False)
-    ICONDF.to_csv(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\CAT-Automate\CAT_files\Backups\ICONBackup.csv', header=False, index=False)
-    CCONDF.to_csv(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\CAT-Automate\CAT_files\Backups\CCONBackup.csv', header=False, index=False)
-    MPLDF.to_csv(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\CAT-Automate\CAT_files\Backups\MPLBackup.csv', header=False, index=False)
-    ODSDF.to_csv(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\CAT-Automate\CAT_files\Backups\ODSBackup.csv', header=False, index=False)
-    EclipseDF.to_csv(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\CAT-Automate\CAT_files\Backups\EclipseBackup.csv', header=False, index=False)
-    ERMSDF.to_csv(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\CAT-Automate\CAT_files\Backups\ERMSBackup.csv', header=False, index=False)
-    MaverickDF.to_csv(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\CAT-Automate\CAT_files\Backups\MaverickBackup.csv', header=False, index=False)
+    combinedDF.to_csv(r'\\PATH\TO\FILES\combined.csv', header=False, index=False)
+    ICONDF.to_csv(r'\\PATH\TO\FILES\ICONBackup.csv', header=False, index=False)
+    CCONDF.to_csv(r'\\PATH\TO\FILES\CCONBackup.csv', header=False, index=False)
+    MPLDF.to_csv(r'\\PATH\TO\FILES\MPLBackup.csv', header=False, index=False)
+    ODSDF.to_csv(r'\\PATH\TO\FILES\ODSBackup.csv', header=False, index=False)
+    EclipseDF.to_csv(r'\\PATH\TO\FILES\EclipseBackup.csv', header=False, index=False)
+    ERMSDF.to_csv(r'\\PATH\TO\FILES\ERMSBackup.csv', header=False, index=False)
+    MaverickDF.to_csv(r'\\PATH\TO\FILES\MaverickBackup.csv', header=False, index=False)
     print('Writing to CSV''s complete!')
     return
 
@@ -386,9 +386,7 @@ def call_macro(wb_path, macro_name,*args, save_path = None):
     print('saving')
     if save_path is not None:
          xl.Application.Run(f'{wb.Name}!Savexlsx', save_path)
-#         subprocess.call([r"C:\Program Files\AutoHotkey\AutoHotkey.exe", r"\\Mklfile\claims\corpfs06-filedrop\ClaimsReporting\Projects\CAT-Automate\CAT_files\Enter.ahk"])
-#         process = subprocess.Popen([r"C:\Program Files\AutoHotkey\AutoHotkey.exe",r"\\Mklfile\claims\corpfs06-filedrop\ClaimsReporting\Projects\CAT-Automate\CAT_files\Enter.ahk"])
-#         process.wait()
+
     #cleanup
     print('quitting')
     xl.Application.DisplayAlerts = False
@@ -401,8 +399,8 @@ def mail(to, cc, subject, text, attach, email_user, email_pwd):
    msg['From'] = email_user
    msg['To'] = ", ".join(to)
    msg['CC'] = ", ".join(cc)
-   bcc=['whan@markelcorp.com']
-   cc = ['john.thomas@markel.com','joe.bizzarri@markel.com']
+   bcc=['USER@EMAIL.com']
+   cc = ['USER@EMAIL.com','USER@EMAIL.com']
    msg['Subject'] = subject
    print('Adding body of message...')
    msg.attach(MIMEText(text))
@@ -426,12 +424,12 @@ def mail(to, cc, subject, text, attach, email_user, email_pwd):
    print('Email Sent!')
 
 def ERMSbase():
-    with open(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\CAT-Automate\SQL\forPython\ERMS\ERMStemp.sql') as t:
+    with open(r'\\PATH\TO\FILES\ERMStemp.sql') as t:
         temp = t.read()
     return temp
 
 def ERMSCAT():
-    with open(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\CAT-Automate\SQL\forPython\ERMS\ERMSfinal.sql') as f:
+    with open(r'\\PATH\TO\FILES\ERMSfinal.sql') as f:
         final = f.read()
     return final
 
