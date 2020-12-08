@@ -19,19 +19,19 @@ def main(email_user, email_pwd, datestring, sendmail:bool = False):
     FAMTDquery, FALossRunQuery = read_queries(acctpd)
     run_queries_csv(FAMTDquery, FALossRunQuery)
     
-    path = r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Monthly_Cognos_Reports\TEMPLATES\FineArts_TEMPLATE.xlsm'
+    path = r'\\PATH\TO\FILES\FineArts_TEMPLATE.xlsm'
     macro = 'FineArts.FAFinal'
-    saveas = r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Monthly Reporting\{end_date:%Y}\{end_date:%m%Y}\Fine Arts Reports - {end_date:%m%Y}.xlsx'.format(end_date=end_date)
+    saveas = r'\\PATH\TO\FILES\{end_date:%Y}\{end_date:%m%Y}\Fine Arts Reports - {end_date:%m%Y}.xlsx'.format(end_date=end_date)
     call_macro(path, macro, save_path = saveas)
     if sendmail:
         flag = False
         while not flag:
             try:
-                recipients = ["kevin.phillips@markelintl.com", "ben.larkin@markelintl.com", "kelly.reeder@markelintl.com", "robert.ashby@markelintl.com", "rraeder@markelcorp.com", "kchristodoulatos@markelcorp.com", "James.Harrison@Markelintl.com"]
+                recipients = ["USER@EMAIL.com", "USER@EMAIL.com"]
                 subject = 'Fine Arts Reports: Monthly Loss Run & MTD Claim Activity'
-                text = "All,\n\nPlease see the attached Fine Arts monthly reports.  Shown is the monthly Loss Run as well as the MTD Claim Activity report.  The data is current as of {end_date:%B}'s month-end financial close date of {end_date:%b %d,%Y}\n\nPlease note: All reports are based on pre-determined requirements where underwriters are listed as James Gregory, policies effective on and/or after 8/28/2016, or Payce Louis, policies effective on and/or after 5/1/2017.\n\nThe monthly Loss Run displays all claims as of MEFC. The MTD Claim Activity report displays all new claims within the period and claims that have total incurred movement during the period.\n\nIf there are any questions, comments, or concerns, please advise.\n\nRegards,\n\nWill Han".format(end_date = end_date)
-                cc = ["rkincaid@markelcorp.com"]
-                report = [r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Monthly Reporting\{end_date:%Y}\{end_date:%m%Y}\Fine Arts Reports - {end_date:%m%Y}.xlsx'.format(end_date=end_date)]
+                text = "All,\n\nPlease see the attached Fine Arts monthly reports.  Shown is the monthly Loss Run as well as the MTD Claim Activity report.  The data is current as of {end_date:%B}'s month-end financial close date of {end_date:%b %d,%Y}\n\nPlease note: All reports are based on pre-determined requirements where underwriters are listed as EMP, policies effective on and/or after 8/28/2016, or Payce Louis, policies effective on and/or after 5/1/2017.\n\nThe monthly Loss Run displays all claims as of MEFC. The MTD Claim Activity report displays all new claims within the period and claims that have total incurred movement during the period.\n\nIf there are any questions, comments, or concerns, please advise.\n\nRegards,\n\nWill Han".format(end_date = end_date)
+                cc = ["USER@EMAIL.com"]
+                report = [r'\\PATH\TO\FILES\{end_date:%Y}\{end_date:%m%Y}\Fine Arts Reports - {end_date:%m%Y}.xlsx'.format(end_date=end_date)]
                 send_email(recipients, subject, text, report, email_user, email_pwd, cc)
                 flag = True
             except SMTPSenderRefused:
@@ -39,7 +39,7 @@ def main(email_user, email_pwd, datestring, sendmail:bool = False):
 	
 
 def get_json():
-    with open(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Monthly_Cognos_Reports\Files\schedule.json') as s:
+    with open(r'\\PATH\TO\FILES\schedule.json') as s:
         schedule = json.loads(s.read())
     return schedule
 	
@@ -51,28 +51,28 @@ def get_open_and_closed_dates(schedule, dates_for=datetime.date.today()):
     return start_date, end_date
 
 def create_folder(end_date):
-	newpathmonth = r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Monthly Reporting\{end_date:%Y}\{end_date:%m%Y}'.format(end_date=end_date)
+	newpathmonth = r'\\PATH\TO\FILES\{end_date:%Y}\{end_date:%m%Y}'.format(end_date=end_date)
 	if not os.path.exists(newpathmonth):
 		os.makedirs(newpathmonth)
 	
 def read_queries(acctpd):
-    with open(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Monthly_Cognos_Reports\SQL\Edited\FineArtsMTDFn.sql') as f:
+    with open(r'\\PATH\TO\FILES\FineArtsMTDFn.sql') as f:
         FAMTDquery = f.read().format(acctpd=acctpd)
-    with open(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Monthly_Cognos_Reports\SQL\Edited\FineArtsLossRunFn.sql') as s:
+    with open(r'\\PATH\TO\FILES\FineArtsLossRunFn.sql') as s:
         FALossRunQuery = s.read().format(acctpd=acctpd)
     return FAMTDquery, FALossRunQuery
 
 def run_queries_csv(FAMTDquery, FALossRunQuery):
-	connection = pyodbc.connect('DRIVER={SQL Server};PORT=1433;SERVER=VA1-PCORSQL191,21612')
+	connection = pyodbc.connect('DRIVER={SQL Server};PORT=1433;SERVER=[SERVER_ADDRESS]')
 	print('Running the FAMTD query...')
 	FAMTD = pd.read_sql_query(FAMTDquery, connection)
 	print('FAMTD query complete!\nRunning the FALossRun query...')
 	FALossRun = pd.read_sql_query(FALossRunQuery, connection)
 	print('FALossRun query complete!')
-	print("Saving FAMTD as a .csv in the 'ClaimsReporting\Projects\Monthly_Cognos_Reports\files\csv' folder...")
-	FAMTD.to_csv(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Monthly_Cognos_Reports\files\csv\FAMTD.csv', header = False, index = False)
-	print("FAMTD.csv saved!\nSaving FALossRun as a .csv in the 'ClaimsReporting\Projects\Monthly_Cognos_Reports\files\csv' folder...")
-	FALossRun.to_csv(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Monthly_Cognos_Reports\files\csv\FALossRun.csv', header = False, index = False)
+	print("Saving FAMTD as a .csv in the 'PATH\TO\FILES' folder...")
+	FAMTD.to_csv(r'\\PATH\TO\FILES\FAMTD.csv', header = False, index = False)
+	print("FAMTD.csv saved!\nSaving FALossRun as a .csv in the 'PATH\TO\FILES' folder...")
+	FALossRun.to_csv(r'\\PATH\TO\FILES\FALossRun.csv', header = False, index = False)
 	print('FALossRun.csv saved!')
 
 def date_format(datestring):
@@ -121,7 +121,7 @@ def send_email(to, subject, text, report, email_user, email_pwd, cc=None):
     msg['From'] = email_user
     msg['To'] = " ,".join(to)
     msg['CC'] = " ,".join(cc)
-    bcc = ['whan@markelcorp.com']
+    bcc = ['USER@EMAIL.COM']
     msg['Subject'] = subject
     print('Adding body of message')
     msg.attach(MIMEText(text))
