@@ -15,9 +15,9 @@ fh.setLevel(logging.DEBUG)
 logger.addHandler(fh)
 
 # constants
-CSV_FILE_NAME = r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Matter_Upload\Files\data\LEXexaminers.csv'
+CSV_FILE_NAME = r'\\PATH\TO\FILE\LEXexaminers.csv'
 #PS1_SCRIPT_NAME = r'.\pull_claims_data.ps1'
-#POWERSHELL_PATH = r'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
+#POWERSHELL_PATH = r'PATH\TO\powershell.exe'
 MAX_ROWS_PER_BATCH = 900
 MAX_PARAMS = 2000
 DATABASE_STATEMENT_TEMPLATE = """
@@ -63,7 +63,7 @@ CREATE_COLUMN_NAMES = [
     '[Matter Class] varchar(50)',
     '[Matter Type] varchar(50)',
     ]
-CONNECTION_STRING = "DRIVER={SQL Server};SERVER=VA1-PCORSQL210,21644;"
+CONNECTION_STRING = "DRIVER={SQL Server};SERVER=[SERVER_ADDRESS];"
 
 
 # the good stuff
@@ -85,8 +85,8 @@ def main():
 #    return
 
 def create_csv_file():
-    data = pd.read_excel(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Matter_Upload\Files\data\Examiner Mapping from Source Systems to LeX.xlsx', sheetname = 0)
-    data.to_csv(r'\\MKLFILE\CLAIMS\corpfs06-filedrop\ClaimsReporting\Projects\Matter_Upload\Files\data\LEXexaminers.csv', index = False)
+    data = pd.read_excel(r'\\PATH\TO\FILE\Examiner Mapping from Source Systems to LeX.xlsx', sheetname = 0)
+    data.to_csv(r'\\PATH\TO\FILE\LEXexaminers.csv', index = False)
 
 #file_name=CSV_FILE_NAME
 def load_new_data(file_name: str) -> list:
