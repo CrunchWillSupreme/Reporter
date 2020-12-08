@@ -4,7 +4,7 @@ Query Search
 import pandas as pd, os, argparse, sys
 
 def main(keyword,year):
-    path = r"\\Mklfile\claims\corpfs06-filedrop\ClaimsReporting\Ad Hoc Reporting"
+    path = r"\\PATH\TO\FILE\Ad Hoc Reporting"
     if year == 'All':
         path = path
     else:
