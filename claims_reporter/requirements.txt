@@ -47,7 +47,7 @@ jupyter-core==4.4.0
 jwt==0.5.4
 leather==0.3.3
 libLAS==1.8.1
-Mako==1.0.7
+Mako==1.2.2
 MarkupSafe==1.0
 matplotlib==2.0.2
 more-itertools==3.2.0
